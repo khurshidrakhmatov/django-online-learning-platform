@@ -1,0 +1,133 @@
+{% extends "base_generic.html" %}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    {% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>Headers · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/headers/" />
+
+    <!-- Bootstrap core CSS -->
+    {% load static %}
+    <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    {% load static %}
+    <link href="{% static 'headers.css' %}" rel="stylesheet" />
+    <link href="{% static 'offcanvas.css' %}" rel="stylesheet">
+    <link href="{% static 'sticky-footer.css' %}" rel="stylesheet">
+    {% endblock %}
+</head>
+{% block content %}
+
+<body class="d-flex flex-column h-100">
+
+
+    <main class="container">
+        <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm">
+            <img class="me-3" src="{% static '/assets/brand/codes-logo-white.svg' %}" alt="" width="48" height="38">
+            <div class="lh-1">
+                {% if user.is_authenticated %}
+                <h1 class="h6 mb-0 text-white lh-1">{{ course.course_name }}</h1>
+                <small>{{ course.course_description }}</small>
+                {% endif %}
+            </div>
+        </div>
+        <div class='container'>
+            <div class='row'>
+                <div class="col my-3 p-3 bg-body rounded shadow-sm">
+                    <h6 class="border-bottom pb-2 mb-0">Question: {{ homework.homework_title }}</h6>
+                    {% if homework %}
+                    <div class="d-flex text-muted pt-3">
+                        <p>{{ homework.homework_instruction }}</p>
+                    </div>
+                    {% else %}
+                    <div class="d-flex text-muted pt-3">
+                        <p>No homework are available.</p>
+                    </div>
+                    {% endif %}
+                    <!--
+            <small class="d-block text-end mt-3">
+                <a href="#">All courses</a>
+            </small>
+            -->
+                    <small class="d-block text-end mt-3">
+                        Due Date: {{ homework.homework_due_date }}
+                    </small>
+
+                </div>
+                <div class='col my-3 p-3 bg-body rounded shadow-sm'>
+                    {% if not request.user.is_staff %}
+                    {% load crispy_forms_tags %}
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div>
+                            <div>
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                            </div>
+                            <br>
+                            <input class="btn btn-primary" type="submit" value="Submit">
+                        </div>
+                    </form>
+                    {% else %}
+                    <div>
+                        <a>Analysis coming soon</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="my-3 p-3 bg-body rounded shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">Submission</h6>
+            {% if submission_list %}
+            {% for submission in submission_list %}
+            <div class="d-flex text-muted pt-3">
+                <a href="{{ submission.submission_file_upload.url }}"><svg t="1619761345701"
+                        class="bd-placeholder-img flex-shrink-0 me-2 rounded" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="2613" width="32" height="32">
+                        <path
+                            d="M512 1024C229.236364 1024 0 794.763636 0 512S229.236364 0 512 0s512 229.236364 512 512-229.236364 512-512 512z m0-938.682182A426.635636 426.635636 0 0 0 85.317818 512 426.635636 426.635636 0 0 0 512 938.682182 426.635636 426.635636 0 0 0 938.682182 512 426.635636 426.635636 0 0 0 512 85.317818z m36.352 625.570909a45.242182 45.242182 0 0 1-21.085091 11.264l-0.139636 0.093091a46.08 46.08 0 0 1-51.246546-9.355636l-163.653818-163.700364a46.266182 46.266182 0 1 1 65.442909-65.442909l91.694546 91.694546V298.682182a42.682182 42.682182 0 0 1 85.317818 0v274.990545l91.834182-91.880727a46.359273 46.359273 0 0 1 65.442909 65.489455l-163.607273 163.653818z"
+                            fill="#1C3743" p-id="2614"></path>
+                    </svg></a>
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">
+                            {{ submission.user }} - {{ submission.filename }}</strong>
+                        Submitted on: {{ submission.homework_submission_updated_datetime }}
+                    </div>
+                    <span class="d-block">{{ homework.homework_description }}</span>
+
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="d-flex text-muted pt-3">
+                <p>No submission are available.</p>
+            </div>
+            {% endif %}
+            <!--
+            <small class="d-block text-end mt-3">
+                <a href="#">All courses</a>
+            </small>
+            -->
+        </div>
+
+
+    </main>
+</body>
+{% endblock %}
+
+{% block script%}
+{% load static %}
+<script src="{% static 'offcanvas.js' %}"></script>
+{% endblock %}
+
+</html>
